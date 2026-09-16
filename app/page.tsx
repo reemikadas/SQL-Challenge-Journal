@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Code2, Download, Eye, FileCode2, GitFork, Loader2, LockKeyhole, Send } from "lucide-react";
+import { CheckCircle2, Code2, Download, Eye, FileCode2, GitFork, Loader2, LockKeyhole, RotateCcw, Send } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
 
 type FormState = { challengeNumber: string; challengeTitle: string; challengeUrl: string; question: string; sql: string; dialect: string; repository: string; branch: string; directory: string; token: string; overwrite: boolean };
-const initialForm: FormState = { challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", sql: "", dialect: "MySQL", repository: "", branch: "main", directory: "challenges", token: "", overwrite: false };
+const initialForm: FormState = { challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", sql: "", dialect: "MySQL", repository: "", branch: "main", directory: "HackerRank_Challenges", token: "", overwrite: false };
 
 function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "sql-challenge";
@@ -32,8 +32,9 @@ export default function Home() {
   const [isImporting, setIsImporting] = useState(false);
   const [imported, setImported] = useState(false);
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
-  const markdown = useMemo(() => markdownFor(form), [form]);
-  const filename = `${slugify(form.challengeNumber)}.md`;
+  const hasChallengeDraft = Boolean(form.challengeNumber.trim() || form.challengeTitle.trim() || form.challengeUrl.trim() || form.question.trim() || form.sql.trim());
+  const markdown = useMemo(() => hasChallengeDraft ? markdownFor(form) : "", [form, hasChallengeDraft]);
+  const filename = form.challengeNumber.trim() ? `${slugify(form.challengeNumber)}.md` : "";
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: { registerTool?: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
@@ -113,6 +114,21 @@ export default function Home() {
     }
   }
 
+  function clearChallenge() {
+    setForm((current) => ({
+      ...current,
+      challengeNumber: "",
+      challengeTitle: "",
+      challengeUrl: "",
+      question: "",
+      sql: "",
+      overwrite: false,
+    }));
+    setImported(false);
+    setPublishedUrl(null);
+    toast.success("Ready for the next challenge");
+  }
+
   async function publish() {
     setIsPublishing(true);
     setPublishedUrl(null);
@@ -145,17 +161,19 @@ export default function Home() {
         <div className="repo-grid">
           <div><FieldLabel id="repository">Repository</FieldLabel><Input id="repository" placeholder="username/sql-solutions" value={form.repository} onChange={(e) => update("repository", e.target.value)} /></div>
           <div><FieldLabel id="branch">Branch</FieldLabel><Input id="branch" value={form.branch} onChange={(e) => update("branch", e.target.value)} /></div>
-          <div><FieldLabel id="directory" optional>Folder</FieldLabel><Input id="directory" value={form.directory} placeholder="challenges" onChange={(e) => update("directory", e.target.value)} /><p className="field-help">Path inside the repo; leave blank to use its root.</p></div>
+          <div><FieldLabel id="directory" optional>Folder</FieldLabel><Input id="directory" value={form.directory} placeholder="HackerRank_Challenges" onChange={(e) => update("directory", e.target.value)} /><p className="field-help">Path inside the repo; leave blank to use its root.</p></div>
           <div><FieldLabel id="token">Fine-grained token</FieldLabel><Input id="token" type="password" autoComplete="off" placeholder="github_pat_…" value={form.token} onChange={(e) => update("token", e.target.value)} /><p className="field-help">Required to create the commit. Use Contents: read and write.</p></div>
         </div>
       </section>
 
       <div className="workspace">
         <section className="editor-column" aria-labelledby="editor-title">
-          <div className="section-heading"><div><p className="step-label">01 / Compose</p><h2 id="editor-title">Challenge + solution</h2></div><Code2 size={22} aria-hidden="true" /></div>
-          <div className="title-grid">
-            <div><FieldLabel id="challenge-number">HackerRank Challenge #</FieldLabel><Input id="challenge-number" placeholder="19506" value={form.challengeNumber} onChange={(e) => update("challengeNumber", e.target.value)} /></div>
-            <div><FieldLabel id="challenge-title">Title</FieldLabel><Input id="challenge-title" placeholder="Challenges" value={form.challengeTitle} onChange={(e) => update("challengeTitle", e.target.value)} /></div>
+          <div className="section-heading">
+            <div><p className="step-label">01 / Compose</p><h2 id="editor-title">Challenge + solution</h2></div>
+            <div className="section-actions">
+              <Button variant="outline" size="sm" disabled={!hasChallengeDraft} onClick={clearChallenge}><RotateCcw /> Clear challenge</Button>
+              <Code2 size={22} aria-hidden="true" />
+            </div>
           </div>
           <div>
             <FieldLabel id="challenge-url">HackerRank challenge URL</FieldLabel>
@@ -169,6 +187,10 @@ export default function Home() {
               {imported ? "Question imported. Paste your accepted SQL solution below." : "The link supplies the public question; your private SQL stays in the editor for you to paste."}
             </p>
           </div>
+          <div className="title-grid">
+            <div><FieldLabel id="challenge-number">HackerRank Challenge #</FieldLabel><Input id="challenge-number" placeholder="19506" value={form.challengeNumber} onChange={(e) => update("challengeNumber", e.target.value)} /></div>
+            <div><FieldLabel id="challenge-title">Title</FieldLabel><Input id="challenge-title" placeholder="Challenges" value={form.challengeTitle} onChange={(e) => update("challengeTitle", e.target.value)} /></div>
+          </div>
           <div className="editor-block">
             <div className="editor-label-row"><FieldLabel id="question">Challenge question</FieldLabel><span>{form.question.length.toLocaleString()} chars</span></div>
             <Textarea id="question" className="question-area" placeholder="Paste the challenge description here…" value={form.question} onChange={(e) => update("question", e.target.value)} />
@@ -181,7 +203,7 @@ export default function Home() {
 
         <aside className="preview-column" aria-labelledby="preview-title">
           <div className="section-heading"><div><p className="step-label">02 / Review</p><h2 id="preview-title">Markdown preview</h2></div><Eye size={22} aria-hidden="true" /></div>
-          <div className="file-tab"><span className="file-dot" /><span>{filename}</span></div>
+          <div className="file-tab"><span className="file-dot" /><span>{filename || "No challenge loaded"}</span></div>
           <pre className="markdown-preview" aria-label="Generated Markdown"><code>{markdown}</code></pre>
           <div className="publish-panel">
             <label className="overwrite-row" htmlFor="overwrite"><Checkbox id="overwrite" checked={form.overwrite} onCheckedChange={(checked) => update("overwrite", checked === true)} />Replace the file if it already exists</label>

@@ -26,6 +26,8 @@ button,input,textarea { font:inherit; }
 .editor-column { display:flex; flex-direction:column; gap:20px; background:#f8f9fc; border-right:1px solid var(--border); }
 .preview-column { min-width:0; background:#eef1f7; }
 .section-heading { display:flex; align-items:center; justify-content:space-between; color:#5c63a8; }
+.section-actions { display:flex; align-items:center; gap:12px; }
+.section-actions button { color:#4b5270; }
 .step-label { color:#6b6ee8; }
 .title-grid { display:grid; grid-template-columns:120px minmax(0,1fr); gap:14px; }
 .import-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; }
