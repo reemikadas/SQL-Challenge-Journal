@@ -12,8 +12,14 @@ import { Toaster } from "@/components/ui/sonner";
 type FormState = { challengeNumber: string; challengeTitle: string; challengeUrl: string; question: string; sql: string; dialect: string; repository: string; branch: string; directory: string; token: string; overwrite: boolean };
 const initialForm: FormState = { challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", sql: "", dialect: "MySQL", repository: "", branch: "main", directory: "HackerRank_Challenges", token: "", overwrite: false };
 
-function slugify(value: string) {
-  return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "sql-challenge";
+function filenamePart(value: string) {
+  return value.trim().replace(/[’']/g, "").replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+}
+
+function filenameFor(challengeNumber: string, challengeTitle: string) {
+  const number = filenamePart(challengeNumber);
+  const title = filenamePart(challengeTitle);
+  return number && title ? `${number}_${title}.md` : "";
 }
 
 function markdownFor(form: FormState) {
@@ -34,7 +40,7 @@ export default function Home() {
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
   const hasChallengeDraft = Boolean(form.challengeNumber.trim() || form.challengeTitle.trim() || form.challengeUrl.trim() || form.question.trim() || form.sql.trim());
   const markdown = useMemo(() => hasChallengeDraft ? markdownFor(form) : "", [form, hasChallengeDraft]);
-  const filename = form.challengeNumber.trim() ? `${slugify(form.challengeNumber)}.md` : "";
+  const filename = filenameFor(form.challengeNumber, form.challengeTitle);
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: { registerTool?: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
@@ -74,7 +80,7 @@ export default function Home() {
           dialect: typeof values.dialect === "string" && values.dialect ? values.dialect : current.dialect,
         }));
         setPublishedUrl(null);
-        return { staged: true, filename: `${slugify(values.challengeNumber as string)}.md` };
+        return { staged: true, filename: filenameFor(values.challengeNumber as string, values.challengeTitle as string) };
       },
     };
     try {

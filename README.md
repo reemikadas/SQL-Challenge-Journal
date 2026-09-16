@@ -7,7 +7,7 @@ A small web application for turning SQL practice problems into consistent Markdo
 ## Features
 
 - Import the public problem statement from a HackerRank challenge URL
-- Name each Markdown file from HackerRank's numeric challenge ID, such as `19506.md`
+- Name each Markdown file from the HackerRank challenge number and title, such as `19506_Weather_Observation_Station_1.md`
 - Add a challenge number, SQL dialect, and accepted SQL solution
 - Preview the generated Markdown and filename before publishing
 - Clear the current challenge while keeping the GitHub destination and token ready for the next one
@@ -19,7 +19,7 @@ A small web application for turning SQL practice problems into consistent Markdo
 
 1. Enter the destination repository as `username/repository`.
 2. Enter a fine-grained GitHub token scoped to that repository with **Contents: read and write** permission.
-3. Paste a HackerRank problem URL and select **Import question**. The challenge ID becomes the Markdown filename.
+3. Paste a HackerRank problem URL and select **Import question**. The challenge number and title become a filename such as `19506_Weather_Observation_Station_1.md`.
 4. Paste the accepted SQL solution.
 5. Review the Markdown and select **Create & push Markdown**.
 6. Select **Clear challenge** before starting the next problem. Repository, branch, folder, token, and SQL dialect are preserved.
