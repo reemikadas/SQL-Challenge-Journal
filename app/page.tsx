@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
 
 type FormState = { challengeNumber: string; challengeTitle: string; challengeUrl: string; question: string; sql: string; dialect: string; repository: string; branch: string; directory: string; token: string; overwrite: boolean };
-const initialForm: FormState = { challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", sql: "", dialect: "MySQL", repository: "", branch: "main", directory: "hackerrank/sql", token: "", overwrite: false };
+const initialForm: FormState = { challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", sql: "", dialect: "MySQL", repository: "", branch: "main", directory: "challenges", token: "", overwrite: false };
 
 function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "sql-challenge";
@@ -33,7 +33,7 @@ export default function Home() {
   const [imported, setImported] = useState(false);
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
   const markdown = useMemo(() => markdownFor(form), [form]);
-  const filename = `${slugify([form.challengeNumber && `challenge-${form.challengeNumber}`, form.challengeTitle].filter(Boolean).join("-"))}.md`;
+  const filename = `${slugify(form.challengeNumber)}.md`;
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: { registerTool?: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
@@ -73,7 +73,7 @@ export default function Home() {
           dialect: typeof values.dialect === "string" && values.dialect ? values.dialect : current.dialect,
         }));
         setPublishedUrl(null);
-        return { staged: true, filename: `${slugify(`challenge-${values.challengeNumber}-${values.challengeTitle}`)}.md` };
+        return { staged: true, filename: `${slugify(values.challengeNumber as string)}.md` };
       },
     };
     try {
@@ -100,9 +100,9 @@ export default function Home() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ url: form.challengeUrl }),
       });
-      const result = (await response.json()) as { message?: string; title?: string; question?: string };
+      const result = (await response.json()) as { message?: string; challengeNumber?: string; title?: string; question?: string };
       if (!response.ok || !result.title || !result.question) throw new Error(result.message || "The challenge could not be imported.");
-      setForm((current) => ({ ...current, challengeTitle: result.title!, question: result.question! }));
+      setForm((current) => ({ ...current, challengeNumber: result.challengeNumber || current.challengeNumber, challengeTitle: result.title!, question: result.question! }));
       setImported(true);
       setPublishedUrl(null);
       toast.success("Challenge question imported");
@@ -145,8 +145,8 @@ export default function Home() {
         <div className="repo-grid">
           <div><FieldLabel id="repository">Repository</FieldLabel><Input id="repository" placeholder="username/sql-solutions" value={form.repository} onChange={(e) => update("repository", e.target.value)} /></div>
           <div><FieldLabel id="branch">Branch</FieldLabel><Input id="branch" value={form.branch} onChange={(e) => update("branch", e.target.value)} /></div>
-          <div><FieldLabel id="directory" optional>Folder</FieldLabel><Input id="directory" value={form.directory} placeholder="hackerrank/sql" onChange={(e) => update("directory", e.target.value)} /></div>
-          <div><FieldLabel id="token">Fine-grained token</FieldLabel><Input id="token" type="password" autoComplete="off" placeholder="github_pat_…" value={form.token} onChange={(e) => update("token", e.target.value)} /><p className="token-help">Requires repository Contents: read and write.</p></div>
+          <div><FieldLabel id="directory" optional>Folder</FieldLabel><Input id="directory" value={form.directory} placeholder="challenges" onChange={(e) => update("directory", e.target.value)} /><p className="field-help">Path inside the repo; leave blank to use its root.</p></div>
+          <div><FieldLabel id="token">Fine-grained token</FieldLabel><Input id="token" type="password" autoComplete="off" placeholder="github_pat_…" value={form.token} onChange={(e) => update("token", e.target.value)} /><p className="field-help">Required to create the commit. Use Contents: read and write.</p></div>
         </div>
       </section>
 
@@ -154,7 +154,7 @@ export default function Home() {
         <section className="editor-column" aria-labelledby="editor-title">
           <div className="section-heading"><div><p className="step-label">01 / Compose</p><h2 id="editor-title">Challenge + solution</h2></div><Code2 size={22} aria-hidden="true" /></div>
           <div className="title-grid">
-            <div><FieldLabel id="challenge-number">Challenge #</FieldLabel><Input id="challenge-number" placeholder="01" value={form.challengeNumber} onChange={(e) => update("challengeNumber", e.target.value)} /></div>
+            <div><FieldLabel id="challenge-number">HackerRank Challenge #</FieldLabel><Input id="challenge-number" placeholder="19506" value={form.challengeNumber} onChange={(e) => update("challengeNumber", e.target.value)} /></div>
             <div><FieldLabel id="challenge-title">Title</FieldLabel><Input id="challenge-title" placeholder="Challenges" value={form.challengeTitle} onChange={(e) => update("challengeTitle", e.target.value)} /></div>
           </div>
           <div>

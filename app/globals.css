@@ -20,7 +20,7 @@ button,input,textarea { font:inherit; }
 .repo-grid { display:grid; grid-template-columns:minmax(220px,1.45fr) minmax(110px,.55fr) minmax(180px,1fr) minmax(220px,1.2fr); gap:14px; }
 .field-label { min-height:18px; display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:7px; color:#30384a; font-size:.78rem; font-weight:700; }
 .field-label span { color:#8a93a3; font-size:.68rem; font-weight:500; }
-.token-help { margin:5px 0 -13px; color:#7b8496; font-size:.67rem; }
+.field-help { margin:5px 0 -13px; color:#7b8496; font-size:.67rem; line-height:1.35; }
 .workspace { display:grid; grid-template-columns:minmax(0,1.12fr) minmax(360px,.88fr); min-height:calc(100vh - 221px); }
 .editor-column,.preview-column { padding:28px clamp(20px,4vw,64px) 40px; }
 .editor-column { display:flex; flex-direction:column; gap:20px; background:#f8f9fc; border-right:1px solid var(--border); }

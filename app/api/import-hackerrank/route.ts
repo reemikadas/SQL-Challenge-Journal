@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 type HackerRankChallenge = {
+  id?: number | string;
   name?: string;
   problem_statement?: string;
   input_format?: string;
@@ -78,6 +79,7 @@ export async function POST(request: Request) {
   if (meaningful(model.output_format)) sections.push(`### Output Format\n\n${model.output_format.trim()}`);
 
   return NextResponse.json({
+    challengeNumber: model.id === undefined || model.id === null ? null : String(model.id),
     title: model.name.trim(),
     question: sections.join("\n\n"),
     difficulty: meaningful(model.difficulty_name) ? model.difficulty_name.trim() : null,
