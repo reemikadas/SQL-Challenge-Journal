@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Code2, Eye, FileCode2, GitFork, Loader2, LockKeyhole, Send } from "lucide-react";
+import { CheckCircle2, Code2, Download, Eye, FileCode2, GitFork, Loader2, LockKeyhole, Send } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,6 +29,8 @@ function FieldLabel({ id, children, optional = false }: { id: string; children: 
 export default function Home() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [imported, setImported] = useState(false);
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
   const markdown = useMemo(() => markdownFor(form), [form]);
   const filename = `${slugify([form.challengeNumber && `challenge-${form.challengeNumber}`, form.challengeTitle].filter(Boolean).join("-"))}.md`;
@@ -85,6 +87,30 @@ export default function Home() {
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
     setPublishedUrl(null);
+    if (key === "challengeUrl") setImported(false);
+  }
+
+  async function importChallenge() {
+    if (!form.challengeUrl.trim()) return;
+    setIsImporting(true);
+    setImported(false);
+    try {
+      const response = await fetch("/api/import-hackerrank", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ url: form.challengeUrl }),
+      });
+      const result = (await response.json()) as { message?: string; title?: string; question?: string };
+      if (!response.ok || !result.title || !result.question) throw new Error(result.message || "The challenge could not be imported.");
+      setForm((current) => ({ ...current, challengeTitle: result.title!, question: result.question! }));
+      setImported(true);
+      setPublishedUrl(null);
+      toast.success("Challenge question imported");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Import failed.");
+    } finally {
+      setIsImporting(false);
+    }
   }
 
   async function publish() {
@@ -131,7 +157,18 @@ export default function Home() {
             <div><FieldLabel id="challenge-number">Challenge #</FieldLabel><Input id="challenge-number" placeholder="01" value={form.challengeNumber} onChange={(e) => update("challengeNumber", e.target.value)} /></div>
             <div><FieldLabel id="challenge-title">Title</FieldLabel><Input id="challenge-title" placeholder="Challenges" value={form.challengeTitle} onChange={(e) => update("challengeTitle", e.target.value)} /></div>
           </div>
-          <div><FieldLabel id="challenge-url" optional>Challenge URL</FieldLabel><Input id="challenge-url" type="url" placeholder="https://www.hackerrank.com/challenges/..." value={form.challengeUrl} onChange={(e) => update("challengeUrl", e.target.value)} /></div>
+          <div>
+            <FieldLabel id="challenge-url">HackerRank challenge URL</FieldLabel>
+            <div className="import-row">
+              <Input id="challenge-url" type="url" placeholder="https://www.hackerrank.com/challenges/.../problem" value={form.challengeUrl} onChange={(e) => update("challengeUrl", e.target.value)} />
+              <Button variant="outline" className="import-button" disabled={!form.challengeUrl.trim() || isImporting} onClick={importChallenge}>
+                {isImporting ? <><Loader2 className="animate-spin" /> Importing…</> : <><Download /> Import question</>}
+              </Button>
+            </div>
+            <p className={imported ? "import-note imported" : "import-note"}>
+              {imported ? "Question imported. Paste your accepted SQL solution below." : "The link supplies the public question; your private SQL stays in the editor for you to paste."}
+            </p>
+          </div>
           <div className="editor-block">
             <div className="editor-label-row"><FieldLabel id="question">Challenge question</FieldLabel><span>{form.question.length.toLocaleString()} chars</span></div>
             <Textarea id="question" className="question-area" placeholder="Paste the challenge description here…" value={form.question} onChange={(e) => update("question", e.target.value)} />
