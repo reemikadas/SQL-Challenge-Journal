@@ -9,21 +9,24 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
 
-type FormState = { challengeNumber: string; challengeTitle: string; challengeUrl: string; question: string; sql: string; dialect: string; repository: string; branch: string; directory: string; token: string; overwrite: boolean };
-const initialForm: FormState = { challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", sql: "", dialect: "MySQL", repository: "", branch: "main", directory: "HackerRank_Challenges", token: "", overwrite: false };
+type ChallengeProvider = "" | "HackerRank" | "DataLemur";
+type FormState = { provider: ChallengeProvider; challengeNumber: string; challengeTitle: string; challengeUrl: string; question: string; sql: string; dialect: string; repository: string; branch: string; directory: string; token: string; overwrite: boolean };
+const initialForm: FormState = { provider: "", challengeNumber: "", challengeTitle: "", challengeUrl: "", question: "", sql: "", dialect: "MySQL", repository: "", branch: "main", directory: "HackerRank_Challenges", token: "", overwrite: false };
 
 function filenamePart(value: string) {
   return value.trim().replace(/[’']/g, "").replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
 }
 
-function filenameFor(challengeNumber: string, challengeTitle: string) {
+function filenameFor(provider: ChallengeProvider, challengeNumber: string, challengeTitle: string) {
   const number = filenamePart(challengeNumber);
   const title = filenamePart(challengeTitle);
-  return number && title ? `${number}_${title}.md` : "";
+  const prefix = provider === "DataLemur" ? "DataLemur_" : "";
+  return number && title ? `${prefix}${number}_${title}.md` : "";
 }
 
 function markdownFor(form: FormState) {
-  const heading = [form.challengeNumber && `Challenge ${form.challengeNumber}`, form.challengeTitle].filter(Boolean).join(": ") || "SQL Challenge";
+  const provider = form.provider === "DataLemur" ? "DataLemur " : "";
+  const heading = [form.challengeNumber && `${provider}Challenge ${form.challengeNumber}`, form.challengeTitle].filter(Boolean).join(": ") || "SQL Challenge";
   const source = form.challengeUrl ? `\n**Source:** [View challenge](${form.challengeUrl})\n` : "";
   return `# ${heading}\n${source}\n## Challenge\n\n${form.question.trim() || "Your challenge question will appear here."}\n\n## SQL Solution\n\n~~~sql\n${form.sql.trim() || "-- Your SQL solution will appear here."}\n~~~\n\n_Dialect: ${form.dialect.trim() || "SQL"}_\n`;
 }
@@ -40,7 +43,7 @@ export default function Home() {
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
   const hasChallengeDraft = Boolean(form.challengeNumber.trim() || form.challengeTitle.trim() || form.challengeUrl.trim() || form.question.trim() || form.sql.trim());
   const markdown = useMemo(() => hasChallengeDraft ? markdownFor(form) : "", [form, hasChallengeDraft]);
-  const filename = filenameFor(form.challengeNumber, form.challengeTitle);
+  const filename = filenameFor(form.provider, form.challengeNumber, form.challengeTitle);
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: { registerTool?: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
@@ -56,6 +59,7 @@ export default function Home() {
           challengeNumber: { type: "string" },
           challengeTitle: { type: "string" },
           challengeUrl: { type: "string" },
+          provider: { type: "string", enum: ["HackerRank", "DataLemur"] },
           question: { type: "string" },
           sql: { type: "string" },
           dialect: { type: "string" },
@@ -70,8 +74,10 @@ export default function Home() {
         for (const key of ["challengeNumber", "challengeTitle", "question", "sql"]) {
           if (typeof values[key] !== "string" || !values[key]) throw new Error(`${key} is required.`);
         }
+        const provider = values.provider === "DataLemur" || values.provider === "HackerRank" ? values.provider : "";
         setForm((current) => ({
           ...current,
+          provider,
           challengeNumber: values.challengeNumber as string,
           challengeTitle: values.challengeTitle as string,
           challengeUrl: typeof values.challengeUrl === "string" ? values.challengeUrl : "",
@@ -80,7 +86,7 @@ export default function Home() {
           dialect: typeof values.dialect === "string" && values.dialect ? values.dialect : current.dialect,
         }));
         setPublishedUrl(null);
-        return { staged: true, filename: filenameFor(values.challengeNumber as string, values.challengeTitle as string) };
+        return { staged: true, filename: filenameFor(provider, values.challengeNumber as string, values.challengeTitle as string) };
       },
     };
     try {
@@ -102,14 +108,26 @@ export default function Home() {
     setIsImporting(true);
     setImported(false);
     try {
-      const response = await fetch("/api/import-hackerrank", {
+      const response = await fetch("/api/import-challenge", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ url: form.challengeUrl }),
       });
-      const result = (await response.json()) as { message?: string; challengeNumber?: string; title?: string; question?: string };
+      const result = (await response.json()) as { message?: string; provider?: ChallengeProvider; challengeNumber?: string; title?: string; question?: string; dialect?: string };
       if (!response.ok || !result.title || !result.question) throw new Error(result.message || "The challenge could not be imported.");
-      setForm((current) => ({ ...current, challengeNumber: result.challengeNumber || current.challengeNumber, challengeTitle: result.title!, question: result.question! }));
+      setForm((current) => {
+        const provider = result.provider || current.provider;
+        const usesDefaultFolder = ["HackerRank_Challenges", "DataLemur_Challenges"].includes(current.directory);
+        return {
+          ...current,
+          provider,
+          challengeNumber: result.challengeNumber || current.challengeNumber,
+          challengeTitle: result.title!,
+          question: result.question!,
+          dialect: result.dialect || current.dialect,
+          directory: usesDefaultFolder ? (provider === "DataLemur" ? "DataLemur_Challenges" : "HackerRank_Challenges") : current.directory,
+        };
+      });
       setImported(true);
       setPublishedUrl(null);
       toast.success("Challenge question imported");
@@ -123,6 +141,7 @@ export default function Home() {
   function clearChallenge() {
     setForm((current) => ({
       ...current,
+      provider: "",
       challengeNumber: "",
       challengeTitle: "",
       challengeUrl: "",
@@ -182,19 +201,19 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <FieldLabel id="challenge-url">HackerRank challenge URL</FieldLabel>
+            <FieldLabel id="challenge-url">Challenge URL</FieldLabel>
             <div className="import-row">
-              <Input id="challenge-url" type="url" placeholder="https://www.hackerrank.com/challenges/.../problem" value={form.challengeUrl} onChange={(e) => update("challengeUrl", e.target.value)} />
+              <Input id="challenge-url" type="url" placeholder="Paste a HackerRank or DataLemur question link" value={form.challengeUrl} onChange={(e) => update("challengeUrl", e.target.value)} />
               <Button variant="outline" className="import-button" disabled={!form.challengeUrl.trim() || isImporting} onClick={importChallenge}>
                 {isImporting ? <><Loader2 className="animate-spin" /> Importing…</> : <><Download /> Import question</>}
               </Button>
             </div>
             <p className={imported ? "import-note imported" : "import-note"}>
-              {imported ? "Question imported. Paste your accepted SQL solution below." : "The link supplies the public question; your private SQL stays in the editor for you to paste."}
+              {imported ? `${form.provider || "Challenge"} question imported. Paste your accepted SQL solution below.` : "Imports public HackerRank and DataLemur SQL questions. Premium content is not accessed."}
             </p>
           </div>
           <div className="title-grid">
-            <div><FieldLabel id="challenge-number">HackerRank Challenge #</FieldLabel><Input id="challenge-number" placeholder="19506" value={form.challengeNumber} onChange={(e) => update("challengeNumber", e.target.value)} /></div>
+            <div><FieldLabel id="challenge-number">Challenge ID</FieldLabel><Input id="challenge-number" placeholder="19506" value={form.challengeNumber} onChange={(e) => update("challengeNumber", e.target.value)} /></div>
             <div><FieldLabel id="challenge-title">Title</FieldLabel><Input id="challenge-title" placeholder="Challenges" value={form.challengeTitle} onChange={(e) => update("challengeTitle", e.target.value)} /></div>
           </div>
           <div className="editor-block">

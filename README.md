@@ -6,8 +6,9 @@ A small web application for turning SQL practice problems into consistent Markdo
 
 ## Features
 
-- Import the public problem statement from a HackerRank challenge URL
-- Name each Markdown file from the HackerRank challenge number and title, such as `19506_Weather_Observation_Station_1.md`
+- Import public SQL problem statements from HackerRank and DataLemur question URLs
+- Name HackerRank files from the challenge number and title, such as `19506_Weather_Observation_Station_1.md`
+- Prefix DataLemur files for clarity, such as `DataLemur_31_Page_With_No_Likes.md`
 - Add a challenge number, SQL dialect, and accepted SQL solution
 - Preview the generated Markdown and filename before publishing
 - Clear the current challenge while keeping the GitHub destination and token ready for the next one
@@ -19,12 +20,12 @@ A small web application for turning SQL practice problems into consistent Markdo
 
 1. Enter the destination repository as `username/repository`.
 2. Enter a fine-grained GitHub token scoped to that repository with **Contents: read and write** permission.
-3. Paste a HackerRank problem URL and select **Import question**. The challenge number and title become a filename such as `19506_Weather_Observation_Station_1.md`.
+3. Paste an individual HackerRank or DataLemur SQL question URL and select **Import question**. Catalog pages are not supported.
 4. Paste the accepted SQL solution.
 5. Review the Markdown and select **Create & push Markdown**.
 6. Select **Clear challenge** before starting the next problem. Repository, branch, folder, token, and SQL dialect are preserved.
 
-HackerRank problem links expose the public challenge text but not the contents of a user's private editor or submission. SQL solutions therefore remain a user-provided field.
+The importer reads public challenge text only. It does not access DataLemur premium questions or the contents of a user's private editor or submission. SQL solutions therefore remain a user-provided field.
 
 ## Run locally
 
