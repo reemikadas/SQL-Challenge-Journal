@@ -14,7 +14,7 @@ The **CITY** table is described as follows:
 ## SQL Solution
 
 ~~~sql
-SELECT FLOOR(AVG(population)) AS total_population
+SELECT FLOOR(AVG(population)) AS average_population
 FROM city;
 ~~~
 
