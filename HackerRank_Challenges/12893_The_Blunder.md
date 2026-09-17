@@ -25,8 +25,7 @@ $1000 \lt \text{Salary} \lt 10^5$.
 ~~~sql
 SELECT
     CEIL(AVG(salary) - AVG(CAST(REPLACE(salary, '0', '') AS UNSIGNED)))
-FROM employees
-WHERE salary BETWEEN 1000 AND POWER(10,5);
+FROM employees;
 ~~~
 
 _Dialect: MySQL_
