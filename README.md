@@ -17,7 +17,14 @@ This repository demonstrates the output of the [SQL Notebook Publisher](https://
 3. In **Repository**, enter the destination in `owner/repository` format—for example, `your-username/sql-challenge-journal`.
 4. In **Branch**, enter an existing branch in that repository. Use `main` unless you intentionally want the files on another branch.
 5. In **Folder**, enter the directory that should contain the Markdown files, such as `HackerRank_Challenges`. Leave it blank to save files at the repository root.
-6. Enter a fine-grained GitHub token that is restricted to your selected repository and has **Contents: Read and write** permission. The app uses the token only for the GitHub request and does not save it.
+6. Create and enter a fine-grained GitHub token:
+   1. Open GitHub's [New fine-grained personal access token](https://github.com/settings/personal-access-tokens/new) page. You can also review GitHub's [personal access token guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+   2. Enter a descriptive **Token name**, such as `SQL Challenge Publisher`, and choose an expiration date.
+   3. Set **Resource owner** to the account or organization that owns the destination repository. Organization-owned repositories may require an administrator to approve the token.
+   4. Under **Repository access**, select **Only select repositories**, then choose the repository entered in step 3.
+   5. Under **Repository permissions**, find **Contents** and select **Read and write**. No additional repository permissions are required for publishing these Markdown files.
+   6. Select **Generate token**, copy the token immediately, and paste it into the web app's **Fine-grained token** field.
+   7. Keep the token private. The app uses it only for the GitHub request and does not save it. Revoke or rotate it from GitHub settings if it is ever exposed.
 7. Paste a HackerRank problem link into **HackerRank challenge URL**.
 8. Select **Import question**. The app imports the public challenge description and fills in the challenge number and title.
 9. Review the imported question, then paste your accepted query into **SQL Solution #**. Update the SQL dialect if necessary.
