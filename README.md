@@ -1,7 +1,5 @@
 # SQL Challenge Journal
 
-## Description
-
 SQL Challenge Journal is a reusable way for anyone to organize and store SQL practice solutions on GitHub. Each challenge is saved as an individual Markdown file containing the public HackerRank or DataLemur problem statement, a link to the original challenge, and the user's MySQL solution.
 
 This repository demonstrates the output of the [SQL Notebook Publisher](https://sql-challenge-publisher.das-reemika.chatgpt.site/), a public web app that imports HackerRank and DataLemur SQL challenge details, creates a consistent Markdown document, and commits it to a GitHub repository selected by the user. Anyone can use the app with a repository and GitHub token they control.
