@@ -26,8 +26,8 @@ This repository demonstrates the output of the [SQL Notebook Publisher](https://
    6. Select **Generate token**, copy the token immediately, and paste it into the web app's **Fine-grained token** field.
    7. Keep the token private. The app uses it only for the GitHub request and does not save it. Revoke or rotate it from GitHub settings if it is ever exposed.
 7. Paste an individual public HackerRank or DataLemur SQL question link into **Challenge URL**. Do not paste a question-catalog page.
-8. Select **Import question**. The app detects the provider and imports the public challenge description, ID, title, and available SQL dialect. DataLemur premium questions are not accessed.
-9. Review the imported question, then paste your accepted query into **SQL Solution #**. Update the SQL dialect if necessary.
+8. Select **Import question**. The app detects the provider, imports the public challenge description, ID, and title, and keeps the SQL dialect set to **MySQL**. DataLemur premium questions are not accessed.
+9. Review the imported question, then paste your accepted MySQL query into **SQL Solution #**.
 10. Review the generated Markdown and filename. HackerRank files follow `<Challenge ID>_<Title>.md`, such as `12889_The_PADS.md`. DataLemur files follow `DataLemur_<Challenge ID>_<Title>.md`, such as `DataLemur_31_Page_With_No_Likes.md`.
 11. Select **Create & push Markdown**. If the filename already exists, enable **Replace the file if it already exists** only when you intentionally want to overwrite it.
 12. Open the published file from the success link. Select **Clear challenge** to start the next problem while keeping your GitHub destination settings available.
