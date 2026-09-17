@@ -2,13 +2,13 @@
 
 ## Description
 
-SQL Challenge Journal is a collection of my SQL practice solutions. Each challenge is stored as an individual Markdown file containing the HackerRank problem statement, a link to the original challenge, and my SQL solution.
+SQL Challenge Journal is a reusable way for anyone to organize and store their SQL practice solutions on GitHub. Each challenge is saved as an individual Markdown file containing the HackerRank problem statement, a link to the original challenge, and the user's SQL solution.
 
-This repository is updated through the [SQL Notebook Publisher](https://sql-challenge-publisher.das-reemika.chatgpt.site/), a public web app that imports HackerRank challenge details, creates a consistent Markdown document, and commits it to a GitHub repository selected by the user. Anyone can use the app with a repository and GitHub token they control.
+This repository demonstrates the output of the [SQL Notebook Publisher](https://sql-challenge-publisher.das-reemika.chatgpt.site/), a public web app that imports HackerRank challenge details, creates a consistent Markdown document, and commits it to a GitHub repository selected by the user. Anyone can use the app with a repository and GitHub token they control.
 
 ## Snap of SQL Notebook Publisher web app
 
-[![SQL Notebook Publisher interface](assets/sql-challenge-publisher.jpg)](https://sql-challenge-publisher.das-reemika.chatgpt.site/)
+[![SQL Notebook Publisher interface showing the challenge and SQL solution editors](assets/sql-challenge-publisher.png)](https://sql-challenge-publisher.das-reemika.chatgpt.site/)
 
 ## Step-by-step guide to use the web app
 
