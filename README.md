@@ -8,7 +8,7 @@ This repository demonstrates the output of the [SQL Notebook Publisher](https://
 
 ## Snap of SQL Notebook Publisher web app
 
-[![SQL Notebook Publisher interface showing the challenge and SQL solution editors](assets/sql-challenge-publisher.png)](https://sql-challenge-publisher.das-reemika.chatgpt.site/)
+[![Current SQL Notebook Publisher interface showing platform selection, challenge editor, SQL solution, and Markdown preview](assets/sql-challenge-publisher.jpg)](https://sql-challenge-publisher.das-reemika.chatgpt.site/)
 
 ## Step-by-step guide to use the web app
 
