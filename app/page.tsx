@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Code2, Download, Eye, FileCode2, GitFork, Loader2, LockKeyhole, RotateCcw, Send } from "lucide-react";
+import { CheckCircle2, ClipboardPaste, Code2, Download, ExternalLink, Eye, FileCode2, GitFork, Loader2, LockKeyhole, RotateCcw, Send } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -138,6 +138,31 @@ export default function Home() {
     }
   }
 
+  async function pasteChallengeUrl() {
+    try {
+      if (!navigator.clipboard?.readText) throw new Error("Clipboard access is not available in this browser.");
+      const clipboardText = (await navigator.clipboard.readText()).trim();
+      if (!clipboardText) throw new Error("Your clipboard is empty. Copy the challenge URL first.");
+
+      let parsedUrl: URL;
+      try {
+        parsedUrl = new URL(clipboardText);
+      } catch {
+        throw new Error("The copied text is not a valid URL.");
+      }
+
+      const hostname = parsedUrl.hostname.toLowerCase();
+      if (!hostname.endsWith("hackerrank.com") && !hostname.endsWith("datalemur.com")) {
+        throw new Error("Copy a HackerRank or DataLemur challenge URL.");
+      }
+
+      update("challengeUrl", parsedUrl.toString());
+      toast.success("Challenge URL pasted");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "The URL could not be pasted.");
+    }
+  }
+
   function clearChallenge() {
     setForm((current) => ({
       ...current,
@@ -202,8 +227,21 @@ export default function Home() {
           </div>
           <div>
             <FieldLabel id="challenge-url">Challenge URL</FieldLabel>
+            <div className="source-actions" aria-label="Challenge websites">
+              <span>1. Open and solve:</span>
+              <Button variant="outline" size="sm" asChild>
+                <a href="https://www.hackerrank.com/domains/sql" target="_blank" rel="noreferrer">HackerRank <ExternalLink /></a>
+              </Button>
+              <Button variant="outline" size="sm" asChild>
+                <a href="https://datalemur.com/questions?category=SQL" target="_blank" rel="noreferrer">DataLemur <ExternalLink /></a>
+              </Button>
+              <span className="copy-hint">2. Copy the challenge URL, then return here.</span>
+            </div>
             <div className="import-row">
               <Input id="challenge-url" type="url" placeholder="Paste a HackerRank or DataLemur question link" value={form.challengeUrl} onChange={(e) => update("challengeUrl", e.target.value)} />
+              <Button variant="outline" className="paste-button" onClick={pasteChallengeUrl}>
+                <ClipboardPaste /> Paste copied URL
+              </Button>
               <Button variant="outline" className="import-button" disabled={!form.challengeUrl.trim() || isImporting} onClick={importChallenge}>
                 {isImporting ? <><Loader2 className="animate-spin" /> Importing…</> : <><Download /> Import question</>}
               </Button>
