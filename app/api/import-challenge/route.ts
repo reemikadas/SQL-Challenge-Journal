@@ -159,7 +159,7 @@ async function importDataLemur(challenge: Extract<ChallengeUrl, { provider: "Dat
     title: model.title.trim(),
     question: model.description.trim(),
     difficulty: meaningful(model.difficulty) ? model.difficulty.trim() : null,
-    dialect: model.defaultRuntime?.toLowerCase() === "mysql" ? "MySQL" : "PostgreSQL",
+    dialect: "MySQL",
   };
 }
 

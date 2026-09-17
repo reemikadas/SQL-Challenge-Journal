@@ -21,7 +21,7 @@ A small web application for turning SQL practice problems into consistent Markdo
 1. Enter the destination repository as `username/repository`.
 2. Enter a fine-grained GitHub token scoped to that repository with **Contents: read and write** permission.
 3. Paste an individual HackerRank or DataLemur SQL question URL and select **Import question**. Catalog pages are not supported.
-4. Paste the accepted SQL solution.
+4. Paste the accepted MySQL solution.
 5. Review the Markdown and select **Create & push Markdown**.
 6. Select **Clear challenge** before starting the next problem. Repository, branch, folder, token, and SQL dialect are preserved.
 
