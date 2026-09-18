@@ -4,6 +4,15 @@ SQL Challenge Journal is a reusable way for anyone to organize and store SQL pra
 
 This repository demonstrates the output of the [SQL Notebook Publisher](https://sql-challenge-publisher.das-reemika.chatgpt.site/), a public web app that imports HackerRank and DataLemur SQL challenge details, creates a consistent Markdown document, and commits it to a GitHub repository selected by the user. Anyone can use the app with a repository and GitHub token they control.
 
+## Challenges solved
+
+<!-- challenge-counts:start -->
+| Platform | Challenges solved |
+| --- | ---: |
+| HackerRank | 21 |
+| DataLemur | 0 |
+<!-- challenge-counts:end -->
+
 ## Snap of SQL Notebook Publisher web app
 
 [![Current SQL Notebook Publisher interface showing platform selection, challenge editor, SQL solution, and Markdown preview](assets/sql-challenge-publisher.jpg)](https://sql-challenge-publisher.das-reemika.chatgpt.site/)
