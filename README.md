@@ -10,8 +10,10 @@ This repository demonstrates the output of the [SQL Notebook Publisher](https://
 | Platform | Challenges solved |
 | --- | ---: |
 | HackerRank | 21 |
-| DataLemur | 0 |
+| DataLemur | 1 |
 <!-- challenge-counts:end -->
+
+These totals are updated automatically whenever a Markdown solution is added to either challenge folder.
 
 ## Snap of SQL Notebook Publisher web app
 
@@ -37,7 +39,7 @@ This repository demonstrates the output of the [SQL Notebook Publisher](https://
 9. Return to SQL Notebook Publisher and paste the copied link into **Challenge URL**. Do not use a question-catalog page.
 10. Select **Import question**. The app detects the provider, imports the public challenge description, ID, and title, and keeps the SQL dialect set to **MySQL**. DataLemur premium questions are not accessed.
 11. Review the imported question, then paste the accepted MySQL query into **SQL Solution #**.
-12. Review the generated Markdown and filename. HackerRank files follow `<Challenge ID>_<Title>.md`, such as `12889_The_PADS.md`. DataLemur files follow `DataLemur_<Challenge ID>_<Title>.md`, such as `DataLemur_31_Page_With_No_Likes.md`.
+12. Review the generated Markdown and filename. Files from both platforms follow `<Challenge ID>_<Title>.md`, such as `12889_The_PADS.md` or `31_Page_With_No_Likes.md`.
 13. Select **Create & push Markdown**. If the filename already exists, enable **Replace the file if it already exists** only when you intentionally want to overwrite it.
 14. Open the published file from the success link. Select **Clear challenge** to start the next problem while keeping your GitHub destination settings available.
 
