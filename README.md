@@ -8,8 +8,8 @@ A public web application for importing supported SQL challenges, combining them 
 
 - Start from prominent HackerRank and DataLemur buttons in the **01 / COMPOSE** workspace
 - Import public SQL problem statements from HackerRank and DataLemur question URLs
-- Name HackerRank files from the challenge number and title, such as `19506_Weather_Observation_Station_1.md`
-- Prefix DataLemur files for clarity, such as `DataLemur_31_Page_With_No_Likes.md`
+
+- Name every challenge file from its challenge number and title, such as `19506_Weather_Observation_Station_1.md` or `31_Page_With_No_Likes.md`
 - Add a challenge number, title, MySQL dialect, and accepted SQL solution
 - Preview the generated Markdown and filename before publishing
 - Clear the current challenge while keeping the GitHub destination and token ready for the next one
