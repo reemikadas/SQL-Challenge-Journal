@@ -17,11 +17,11 @@ function filenamePart(value: string) {
   return value.trim().replace(/[’']/g, "").replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
 }
 
-function filenameFor(provider: ChallengeProvider, challengeNumber: string, challengeTitle: string) {
+function filenameFor(challengeNumber: string, challengeTitle: string) {  const number = filenamePart(challengeNumber);  const title = filenamePart(challengeTitle);  return number && title ? `${number}_${title}.md` : "";}
   const number = filenamePart(challengeNumber);
   const title = filenamePart(challengeTitle);
-  const prefix = provider === "DataLemur" ? "DataLemur_" : "";
-  return number && title ? `${prefix}${number}_${title}.md` : "";
+function filenameFor(challengeNumber: string, challengeTitle: string) {
+  function filenameFor(challengeNumber: string, challengeTitle: string) {
 }
 
 function markdownFor(form: FormState) {
@@ -43,7 +43,7 @@ export default function Home() {
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
   const hasChallengeDraft = Boolean(form.challengeNumber.trim() || form.challengeTitle.trim() || form.challengeUrl.trim() || form.question.trim() || form.sql.trim());
   const markdown = useMemo(() => hasChallengeDraft ? markdownFor(form) : "", [form, hasChallengeDraft]);
-  const filename = filenameFor(form.provider, form.challengeNumber, form.challengeTitle);
+  const filename = return number && title ? `${number}_${title}.md` : "";;
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: { registerTool?: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
@@ -86,7 +86,7 @@ export default function Home() {
           dialect: typeof values.dialect === "string" && values.dialect ? values.dialect : current.dialect,
         }));
         setPublishedUrl(null);
-        return { staged: true, filename: filenameFor(provider, values.challengeNumber as string, values.challengeTitle as string) };
+        return { staged: true, filename: filenameFor(form.challengeNumber, form.challengeTitle) };
       },
     };
     try {
