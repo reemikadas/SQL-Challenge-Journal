@@ -13,9 +13,11 @@ The total score of a hacker is the sum of their maximum scores for all of the ch
 The following tables contain contest data:
 
 - _Hackers:_ The _hacker\_id_ is the id of the hacker, and _name_ is the name of the hacker.
+
   <img src="https://s3.amazonaws.com/hr-challenge-images/19503/1458522826-a9ddd28469-ScreenShot2016-03-21at6.40.27AM.png"/>
 
 - _Submissions:_ The _submission\_id_ is the id of the submission, _hacker\_id_ is the id of the hacker who made the submission, _challenge\_id_ is the id of the challenge for which the submission belongs to, and _score_ is the score of the submission.
+
   <img src="https://s3.amazonaws.com/hr-challenge-images/19503/1458523022-771511df90-ScreenShot2016-03-21at6.40.37AM.png"/>
 
 ## SQL Solution
