@@ -1,0 +1,67 @@
+name: Update challenge counts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "HackerRank_Challenges/**/*.md"
+      - "DataLemur_Challenges/**/*.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-challenge-counts
+  cancel-in-progress: true
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Count solutions and update README
+        shell: bash
+        run: |
+          hacker_rank_count="$(find HackerRank_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
+          data_lemur_count="$(find DataLemur_Challenges -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | xargs)"
+          python3 - "$hacker_rank_count" "$data_lemur_count" <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          readme = Path("README.md")
+          content = readme.read_text()
+          replacement = f"""<!-- challenge-counts:start -->
+          | Platform | Challenges solved |
+          | --- | ---: |
+          | HackerRank | {sys.argv[1]} |
+          | DataLemur | {sys.argv[2]} |
+          <!-- challenge-counts:end -->"""
+          updated, replacements = re.subn(
+              r"<!-- challenge-counts:start -->.*?<!-- challenge-counts:end -->",
+              replacement,
+              content,
+              flags=re.DOTALL,
+          )
+          if replacements != 1:
+              raise SystemExit("README challenge-count markers are missing or duplicated")
+          readme.write_text(updated)
+          PY
+
+      - name: Commit updated counts
+        shell: bash
+        run: |
+          if git diff --quiet -- README.md; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Update challenge solution counts"
+          git push
