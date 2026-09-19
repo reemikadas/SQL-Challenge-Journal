@@ -53,7 +53,7 @@ button,input,textarea { font:inherit; }
 .question-area { min-height:190px; resize:vertical; background:#fff; line-height:1.55; }
 .sql-area { min-height:210px; resize:vertical; border-color:#363661; background:#17172e; color:#f1f1ff; font-family:var(--font-mono); line-height:1.6; }
 .sql-area::placeholder { color:#7d7f9e; }
-
+.dialect-input { width:132px; height:32px; font:.72rem/1 var(--font-mono); }
 .file-tab { height:40px; display:flex; align-items:center; gap:9px; margin-top:22px; padding:0 14px; overflow:hidden; color:#3d4560; background:#fff; border:1px solid var(--border); border-bottom:0; border-radius:9px 9px 0 0; font:.75rem/1 var(--font-mono); }
 .file-tab span:last-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .file-dot { width:8px; height:8px; flex:0 0 auto; border-radius:999px; background:#6666e8; }
