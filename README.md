@@ -9,7 +9,7 @@ This repository demonstrates the output of the [SQL Notebook Publisher](https://
 <!-- challenge-counts:start -->
 | Platform | Challenges solved |
 | --- | ---: |
-| HackerRank | 23 |
+| HackerRank | 24 |
 | DataLemur | 3 |
 <!-- challenge-counts:end -->
 
