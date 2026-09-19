@@ -54,4 +54,4 @@ WHERE finish_date IS NULL
 ORDER BY part, assembly_step;
 ~~~
 
-_Dialect: MySQL_
+_Dialect: PostgreSQL_
