@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -17,11 +18,10 @@ function filenamePart(value: string) {
   return value.trim().replace(/[’']/g, "").replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
 }
 
-function filenameFor(challengeNumber: string, challengeTitle: string) {  const number = filenamePart(challengeNumber);  const title = filenamePart(challengeTitle);  return number && title ? `${number}_${title}.md` : "";}
+function filenameFor(challengeNumber: string, challengeTitle: string) {
   const number = filenamePart(challengeNumber);
   const title = filenamePart(challengeTitle);
-function filenameFor(challengeNumber: string, challengeTitle: string) {
-  function filenameFor(challengeNumber: string, challengeTitle: string) {
+  return number && title ? `${number}_${title}.md` : "";
 }
 
 function markdownFor(form: FormState) {
@@ -43,7 +43,7 @@ export default function Home() {
   const [publishedUrl, setPublishedUrl] = useState<string | null>(null);
   const hasChallengeDraft = Boolean(form.challengeNumber.trim() || form.challengeTitle.trim() || form.challengeUrl.trim() || form.question.trim() || form.sql.trim());
   const markdown = useMemo(() => hasChallengeDraft ? markdownFor(form) : "", [form, hasChallengeDraft]);
-  const filename = return number && title ? `${number}_${title}.md` : "";;
+  const filename = filenameFor(form.challengeNumber, form.challengeTitle);
 
   useEffect(() => {
     const modelContext = (document as Document & { modelContext?: { registerTool?: (tool: unknown, options?: { signal?: AbortSignal }) => void | Promise<void> } }).modelContext;
@@ -86,7 +86,7 @@ export default function Home() {
           dialect: typeof values.dialect === "string" && values.dialect ? values.dialect : current.dialect,
         }));
         setPublishedUrl(null);
-        return { staged: true, filename: filenameFor(form.challengeNumber, form.challengeTitle) };
+        return { staged: true, filename: filenameFor(values.challengeNumber as string, values.challengeTitle as string) };
       },
     };
     try {
@@ -239,7 +239,18 @@ export default function Home() {
             <Textarea id="question" className="question-area" placeholder="Paste the challenge description here…" value={form.question} onChange={(e) => update("question", e.target.value)} />
           </div>
           <div className="editor-block">
-            <div className="editor-label-row"><FieldLabel id="sql">SQL Solution #</FieldLabel><Input aria-label="SQL dialect" className="dialect-input" value={form.dialect} onChange={(e) => update("dialect", e.target.value)} /></div>
+            <div className="editor-label-row">
+              <FieldLabel id="sql">SQL Solution #</FieldLabel>
+              <Select value={form.dialect} onValueChange={(value) => update("dialect", value)}>
+                <SelectTrigger aria-label="SQL dialect" className="dialect-input">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent align="end">
+                  <SelectItem value="MySQL">MySQL</SelectItem>
+                  <SelectItem value="PostgreSQL">PostgreSQL</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <Textarea id="sql" spellCheck={false} className="sql-area" placeholder="SELECT …" value={form.sql} onChange={(e) => update("sql", e.target.value)} />
           </div>
         </section>
