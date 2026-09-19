@@ -10,7 +10,7 @@ A public web application for importing supported SQL challenges, combining them 
 - Import public SQL problem statements from HackerRank and DataLemur question URLs
 
 - Name every challenge file from its challenge number and title, such as `19506_Weather_Observation_Station_1.md` or `31_Page_With_No_Likes.md`
-- Add a challenge number, title, MySQL dialect, and accepted SQL solution
+
 - Preview the generated Markdown and filename before publishing
 - Clear the current challenge while keeping the GitHub destination and token ready for the next one
 - Commit one Markdown file per challenge to a selected GitHub repository and folder
