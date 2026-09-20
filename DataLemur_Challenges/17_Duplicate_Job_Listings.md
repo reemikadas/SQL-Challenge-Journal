@@ -51,7 +51,7 @@ FROM
     COUNT(*)
   FROM job_listings
   GROUP BY company_id, title, description
-  HAVING COUNT(*) = 2
+  HAVING COUNT(*) > 1
   ORDER BY company_id) AS t1
 ;
 ~~~
