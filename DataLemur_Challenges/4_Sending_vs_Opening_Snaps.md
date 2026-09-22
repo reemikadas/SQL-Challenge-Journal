@@ -70,8 +70,8 @@ The dataset you are querying against may have different input & output - **this 
 WITH time_spent_table AS (
   SELECT
     ab.age_bucket,
-    SUM(CASE WHEN a.activity_type = 'open' THEN time_spent END) AS time_spent_opening,
-    SUM(CASE WHEN a.activity_type = 'send' THEN time_spent END) AS time_spent_sending
+    SUM(CASE WHEN a.activity_type = 'open' THEN a.time_spent END) AS time_spent_opening,
+    SUM(CASE WHEN a.activity_type = 'send' THEN a.time_spent END) AS time_spent_sending
   FROM activities a
   INNER JOIN age_breakdown ab ON ab.user_id = a.user_id
   GROUP BY ab.age_bucket
