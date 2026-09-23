@@ -53,10 +53,9 @@ The dataset you are querying against may have different input & output - **this 
 ~~~sql
 SELECT
   CASE
-  WHEN order_id % 2 = 0 THEN order_id-1
-  WHEN order_id = (SELECT MAX(order_id) FROM orders)
-      AND order_id % 2 <> 0 THEN order_id
-  WHEN order_id % 2 <> 0 THEN order_id+1
+    WHEN order_id % 2 = 0 THEN order_id-1
+    WHEN order_id = (SELECT MAX(order_id) FROM orders) AND order_id % 2 <> 0 THEN order_id
+    WHEN order_id % 2 <> 0 THEN order_id+1
   END AS corrected_order_id,
   item
 FROM orders
