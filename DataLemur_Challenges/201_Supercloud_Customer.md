@@ -59,7 +59,9 @@ SELECT
 FROM customer_contracts cc
 INNER JOIN products p ON p.product_id = cc.product_id
 GROUP BY cc.customer_id
-HAVING COUNT(DISTINCT p.product_category) = 3
+HAVING COUNT(DISTINCT p.product_category) = (
+                            SELECT COUNT(DISTINCT product_category)
+                            FROM products)
 ORDER BY cc.customer_id
 ;
 ~~~
