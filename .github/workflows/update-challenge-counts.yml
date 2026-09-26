@@ -37,11 +37,11 @@ jobs:
 
           readme = Path("README.md")
           content = readme.read_text()
+          total_count = int(sys.argv[1]) + int(sys.argv[2])
           replacement = f"""<!-- challenge-counts:start -->
-          | Platform | Challenges solved |
-          | --- | ---: |
-          | HackerRank | {sys.argv[1]} |
-          | DataLemur | {sys.argv[2]} |
+          |  | HackerRank | DataLemur | Total Challenges Solved |
+          | --- | ---: | ---: | ---: |
+          | Challenges Solved | {sys.argv[1]} | {sys.argv[2]} | {total_count} |
           <!-- challenge-counts:end -->"""
           updated, replacements = re.subn(
               r"<!-- challenge-counts:start -->.*?<!-- challenge-counts:end -->",
